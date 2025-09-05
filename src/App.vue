@@ -1,12 +1,27 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import JSON from './components/JSON.vue'
-import Form from './components/Form.vue'
+import BHeader from './components/BHeader.vue'
 </script>
 
 <template>
-  <Form />
+  <header>
+    <BHeader />
+  </header>
+
+  <main>
+    <!-- <Form /> -->
+    <!-- <JSONLab /> -->
+    <router-view></router-view>
+  </main>
+
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 20px;
+  /* background-color: #e0bfbf; */
+  border-radius: 10px;
+}
+</style>
