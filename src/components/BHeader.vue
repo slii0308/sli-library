@@ -1,13 +1,21 @@
 <script setup>
-import { inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { useFirebaseAuth } from '@/composables/useFirebaseAuth'
 
 const router = useRouter()
-const auth = inject('auth')
+const { logout, user, userRole, isAuthenticated } = useFirebaseAuth()
 
-const handleLogout = () => {
-  auth.logout()
-  router.push('/login')
+const handleLogout = async () => {
+  // Log current user info to console before logout (for screenshot requirement)
+  console.log('Current user:', user.value?.email)
+  console.log('User role:', userRole.value)
+
+  try {
+    await logout()
+    router.push('/login')
+  } catch (error) {
+    console.error('Logout error:', error)
+  }
 }
 </script>
 
@@ -23,12 +31,21 @@ const handleLogout = () => {
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
-        <li class="nav-item" v-if="!auth.isAuthenticated.value">
+        <li class="nav-item">
+          <router-link to="/Addbook" class="nav-link" active-class="active">AddBooks</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FireLogin" class="nav-link" active-class="active">Firebase Login</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/FireRegister" class="nav-link" active-class="active">Firebase Register</router-link>
+        </li>
+        <li class="nav-item" v-if="!isAuthenticated">
           <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
         </li>
-        <li class="nav-item" v-if="auth.isAuthenticated.value">
+        <li class="nav-item" v-if="isAuthenticated">
           <div class="nav-link d-flex align-items-center">
-            <span class="me-2">Welcome, {{ auth.currentUser.value }}!</span>
+            <span class="me-2">Welcome, {{ user?.email || 'User' }} ({{ userRole || 'user' }})!</span>
             <button class="btn btn-outline-primary btn-sm" @click="handleLogout">
               Logout
             </button>

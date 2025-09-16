@@ -1,32 +1,28 @@
 <script setup>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useFirebaseAuth } from '@/composables/useFirebaseAuth'
 
 const router = useRouter()
-const auth = inject('auth')
+const { login, error, loading, clearError } = useFirebaseAuth()
 
 const loginData = ref({
-  username: '',
+  email: '',
   password: ''
 })
 
 const errors = ref({
-  username: null,
-  password: null,
-  general: null
+  email: null,
+  password: null
 })
 
-// Hardcoded authentication credentials
-const validCredentials = {
-  username: 'admin',
-  password: 'password123'
-}
-
-const validateUsername = () => {
-  if (!loginData.value.username) {
-    errors.value.username = 'Username is required'
+const validateEmail = () => {
+  if (!loginData.value.email) {
+    errors.value.email = 'Email is required'
+  } else if (!/\S+@\S+\.\S+/.test(loginData.value.email)) {
+    errors.value.email = 'Email is invalid'
   } else {
-    errors.value.username = null
+    errors.value.email = null
   }
 }
 
@@ -38,45 +34,42 @@ const validatePassword = () => {
   }
 }
 
-const handleLogin = () => {
+const handleLogin = async () => {
   // Clear previous errors
   errors.value = {
-    username: null,
-    password: null,
-    general: null
+    email: null,
+    password: null
   }
+  clearError()
 
   // Validate form
-  validateUsername()
+  validateEmail()
   validatePassword()
 
-  if (errors.value.username || errors.value.password) {
+  if (errors.value.email || errors.value.password) {
     return
   }
 
-  // Check credentials
-  if (loginData.value.username === validCredentials.username &&
-    loginData.value.password === validCredentials.password) {
-    // Login successful, use global authentication method
-    auth.login(loginData.value.username)
-
-    // Redirect to home page
+  try {
+    await login(loginData.value.email, loginData.value.password)
+    // Login successful, redirect to home page
     router.push('/')
-  } else {
-    errors.value.general = 'Invalid username or password'
+  } catch (err) {
+    // Error is handled by the composable
+    console.error('Login error:', err)
   }
 }
 
 const clearForm = () => {
   loginData.value = {
-    username: '',
+    email: '',
     password: ''
   }
   errors.value = {
-    username: null,
-    password: null,
-    general: null
+    email: null,
+    password: null
   }
+  clearError()
 }
 </script>
 
@@ -86,16 +79,16 @@ const clearForm = () => {
       <div class="col-md-6 offset-md-3">
         <div class="card">
           <div class="card-header">
-            <h2 class="text-center mb-0">🔐 Library Login</h2>
+            <h2 class="text-center mb-0">🔐 Firebase Login</h2>
           </div>
           <div class="card-body">
             <form @submit.prevent="handleLogin">
               <div class="mb-3">
-                <label for="login-username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="login-username" v-model="loginData.username"
-                  @blur="validateUsername" @input="validateUsername" :class="{ 'is-invalid': errors.username }" />
-                <div v-if="errors.username" class="invalid-feedback">
-                  {{ errors.username }}
+                <label for="login-email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="login-email" v-model="loginData.email"
+                  @blur="validateEmail" @input="validateEmail" :class="{ 'is-invalid': errors.email }" />
+                <div v-if="errors.email" class="invalid-feedback">
+                  {{ errors.email }}
                 </div>
               </div>
 
@@ -108,19 +101,21 @@ const clearForm = () => {
                 </div>
               </div>
 
-              <div v-if="errors.general" class="alert alert-danger" role="alert">
-                {{ errors.general }}
+              <div v-if="error" class="alert alert-danger" role="alert">
+                {{ error }}
               </div>
 
               <div class="text-center">
-                <button type="submit" class="btn btn-primary me-2">Login</button>
+                <button type="submit" class="btn btn-primary me-2" :disabled="loading">
+                  {{ loading ? 'Logging in...' : 'Login' }}
+                </button>
                 <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
               </div>
             </form>
 
             <div class="mt-4 text-center">
               <small class="text-muted">
-                Demo credentials: <strong>admin</strong> / <strong>password123</strong>
+                Use Firebase authentication to login
               </small>
             </div>
           </div>

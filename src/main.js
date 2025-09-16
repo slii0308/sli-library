@@ -7,37 +7,30 @@ import router from './router'
 import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura'
 
-// Global authentication state management
-import { ref } from 'vue'
+// Firebase imports
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
 
-// Create global authentication state
-const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true')
-const currentUser = ref(localStorage.getItem('currentUser') || null)
-
-// Authentication methods
-const login = (username) => {
-  isAuthenticated.value = true
-  currentUser.value = username
-  localStorage.setItem('isAuthenticated', 'true')
-  localStorage.setItem('currentUser', username)
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: 'AIzaSyCx59Zz_qCJyFREnOREjhJzYJxssELCB3I',
+  authDomain: 'sli-library.firebaseapp.com',
+  projectId: 'sli-library',
+  storageBucket: 'sli-library.firebasestorage.app',
+  messagingSenderId: '768078067361',
+  appId: '1:768078067361:web:ee2ba5e20ff7fd6baf22e0',
 }
 
-const logout = () => {
-  isAuthenticated.value = false
-  currentUser.value = null
-  localStorage.removeItem('isAuthenticated')
-  localStorage.removeItem('currentUser')
-}
+// Initialize Firebase
+const firebaseApp = initializeApp(firebaseConfig)
+const db = getFirestore(firebaseApp)
 
+// Create Vue app
 const app = createApp(App)
 
-// Provide global authentication state and methods
-app.provide('auth', {
-  isAuthenticated,
-  currentUser,
-  login,
-  logout,
-})
+// Provide Firebase services globally
+app.provide('firebaseApp', firebaseApp)
+app.provide('firebaseDb', db)
 
 app.use(PrimeVue, { theme: { preset: Aura } })
 app.use(router)
