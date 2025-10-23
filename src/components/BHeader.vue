@@ -32,7 +32,22 @@ const handleLogout = async () => {
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/Addbook" class="nav-link" active-class="active">AddBooks</router-link>
+          <router-link to="/addbook" class="nav-link" active-class="active">Add Book</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/book-management" class="nav-link" active-class="active">Book Management</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/book-query" class="nav-link" active-class="active">Book Query</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/book-count" class="nav-link" active-class="active">Book Count</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/weather" class="nav-link" active-class="active">Weather</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/CountBookAPI" class="nav-link" active-class="active">Count Book API</router-link>
         </li>
         <li class="nav-item">
           <router-link to="/FireLogin" class="nav-link" active-class="active">Firebase Login</router-link>

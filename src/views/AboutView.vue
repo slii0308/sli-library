@@ -6,9 +6,32 @@
         community.</p>
     </div>
   </div>
-
 </template>
 
 <script setup>
 // No script needed for now
 </script>
+
+<style scoped>
+.container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.about {
+  text-align: center;
+}
+
+.about h1 {
+  color: #275fda;
+  margin-bottom: 20px;
+}
+
+.about p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #666;
+}
+</style>

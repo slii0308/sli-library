@@ -1,19 +1,29 @@
-<script setup>
-import BHeader from './components/BHeader.vue'
-</script>
-
 <template>
-  <header>
-    <BHeader />
-  </header>
-
-  <main>
-    <!-- <Form /> -->
-    <!-- <JSONLab /> -->
-    <router-view></router-view>
-  </main>
-
+  <div class="main-container">
+    <header v-if="showHeader">
+      <BHeader />
+    </header>
+    <main class="main-box">
+      <router-view></router-view>
+    </main>
+  </div>
 </template>
+
+<script>
+import BHeader from './components/BHeader.vue';
+
+export default {
+  name: 'App',
+  components: {
+    BHeader
+  },
+  computed: {
+    showHeader() {
+      return this.$route.name !== 'CountBookAPI';
+    }
+  }
+};
+</script>
 
 <style scoped>
 .container {

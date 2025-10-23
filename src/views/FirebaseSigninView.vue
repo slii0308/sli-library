@@ -20,7 +20,7 @@ const signin = () => {
     .then((data) => {
       console.log("Firebase Signin Successful!")
       router.push("/")
-      console.log(auth.currentUser) //To check the current User signed in
+      console.log(auth.currentUser)
     }).catch((error) => {
       console.log(error.code);
     })
