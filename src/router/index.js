@@ -9,15 +9,6 @@ import AccessDeniedView from '../views/AccessDeniedView.vue'
 import FirebaseSigninView from '@/views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '@/views/FirebaseRegisterView.vue'
 
-import { createRouter, createWebHistory } from 'vue-router'
-
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes: [
-    // your routes here
-  ],
-})
-
 const routes = [
   {
     path: '/',
